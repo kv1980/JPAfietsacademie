@@ -18,9 +18,6 @@ public class Docent implements Serializable {
 	private BigDecimal wedde;
 	private String emailAdres;
 
-	protected Docent() {
-	}
-	
 	public long getId() {
 		return id;
 	}
@@ -30,9 +27,11 @@ public class Docent implements Serializable {
 	public String getFamilienaam() {
 		return familienaam;
 	}
+
 	public BigDecimal getWedde() {
 		return wedde;
 	}
+	
 	public String getEmailAdres() {
 		return emailAdres;
 	}
