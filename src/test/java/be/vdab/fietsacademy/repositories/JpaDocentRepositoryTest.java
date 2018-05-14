@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.math.BigDecimal;
 
+import javax.persistence.EntityManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +31,8 @@ import be.vdab.fietsacademy.enums.Geslacht;
 public class JpaDocentRepositoryTest extends AbstractTransactionalJUnit4SpringContextTests {
 	@Autowired
 	private JpaDocentRepository repository;
+	@Autowired
+	private EntityManager manager;
 	private static final String DOCENTEN= "docenten";
 	private Docent docent;
 	
@@ -72,5 +76,14 @@ public class JpaDocentRepositoryTest extends AbstractTransactionalJUnit4SpringCo
 		assertEquals(Geslacht.MAN,repository.read(idVanTestMan()).get().getGeslacht());
 		assertEquals(Geslacht.VROUW,repository.read(idVanTestVrouw()).get().getGeslacht());
 	}
-
+	
+	@Test
+	public void delete_verwijdert_een_docent() {
+		long id = idVanTestMan();
+		int aantalDocenten = super.countRowsInTable(DOCENTEN);
+		repository.delete(id);
+		manager.flush();
+		assertEquals(aantalDocenten - 1, super.countRowsInTable(DOCENTEN));
+		assertEquals(0,super.countRowsInTableWhere(DOCENTEN,"id = "+id));
+	}
 }
