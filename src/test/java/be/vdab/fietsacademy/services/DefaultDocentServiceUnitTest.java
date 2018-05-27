@@ -19,7 +19,7 @@ import be.vdab.fietsacademy.exceptions.DocentNietGevondenException;
 import be.vdab.fietsacademy.repositories.DocentRepository;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultDocentServiceTest {
+public class DefaultDocentServiceUnitTest {
 	private DefaultDocentService service;
 	@Mock
 	private DocentRepository repository;
