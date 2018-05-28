@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -85,5 +86,11 @@ public class JpaDocentRepositoryTest extends AbstractTransactionalJUnit4SpringCo
 		manager.flush();
 		assertEquals(aantalDocenten - 1, super.countRowsInTable(DOCENTEN));
 		assertEquals(0,super.countRowsInTableWhere(DOCENTEN,"id = "+id));
+	}
+	
+	@Test
+	public void findAll() {
+		List<Docent> docenten = repository.findAll();
+		assertEquals(super.countRowsInTable(DOCENTEN),docenten.size());
 	}
 }

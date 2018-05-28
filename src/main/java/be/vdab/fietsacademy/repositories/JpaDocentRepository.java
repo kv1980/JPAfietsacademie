@@ -1,5 +1,6 @@
 package be.vdab.fietsacademy.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -29,5 +30,10 @@ class JpaDocentRepository implements DocentRepository {
 	@Override
 	public void delete(long id) {
 		read(id).ifPresent(docent -> manager.remove(docent));
+	}
+
+	@Override
+	public List<Docent> findAll() {
+		return manager.createQuery("select d from Docent d",Docent.class).getResultList();
 	}
 }
