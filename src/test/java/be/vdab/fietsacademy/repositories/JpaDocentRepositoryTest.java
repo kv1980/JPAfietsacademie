@@ -150,4 +150,12 @@ public class JpaDocentRepositoryTest extends AbstractTransactionalJUnit4SpringCo
 							  .filter(WeddeEnAantal -> WeddeEnAantal.getWedde().compareTo(BigDecimal.valueOf(1000)) == 0)
 							  .forEach(WeddeEnAantal -> assertEquals(aantalDocentenMetWedde1000,WeddeEnAantal.getAantal()));
 	}
+	
+	@Test
+	public void algemeneOpslag() {
+		int aantalRecordsAangepast = repository.algemeneOpslag(BigDecimal.TEN);
+		assertEquals(super.countRowsInTable(DOCENTEN),aantalRecordsAangepast);
+		BigDecimal nieuweWeddeVanTestM = super.jdbcTemplate.queryForObject("select wedde from docenten where id=?",BigDecimal.class,idVanTestMan());
+		assertEquals(0,nieuweWeddeVanTestM.compareTo(BigDecimal.valueOf(1_100)));
+	}
 }

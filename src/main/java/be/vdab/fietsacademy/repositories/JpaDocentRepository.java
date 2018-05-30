@@ -1,6 +1,8 @@
 package be.vdab.fietsacademy.repositories;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,5 +72,12 @@ class JpaDocentRepository implements DocentRepository {
 	public List<AantalDocentenPerWedde> findAantalDocentenPerWedde() {
 		return manager.createQuery("select new be.vdab.fietsacademy.valueobjects.AantalDocentenPerWedde(d.wedde,count(d)) from Docent d group by d.wedde",AantalDocentenPerWedde.class)
 					  .getResultList();
+	}
+
+	@Override
+	public int algemeneOpslag(BigDecimal percentage) {
+		return manager.createNamedQuery("Docent.algemeneOpslag")
+					  .setParameter("factor",BigDecimal.ONE.add(percentage.divide(BigDecimal.valueOf(100))))
+					  .executeUpdate();
 	}
 }
