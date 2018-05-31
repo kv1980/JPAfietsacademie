@@ -18,7 +18,7 @@ class JpaCursusRepository implements CursusRepository {
 	}
 
 	@Override
-	public Optional<Cursus> read(String id) {
+	public Optional<Cursus> read(long id) {
 		return Optional.ofNullable(manager.find(Cursus.class, id)); 
 	}
 
