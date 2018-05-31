@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +30,17 @@ import be.vdab.fietsacademy.entities.IndividueleCursus;
 public class JpaCursusRepositoryTest extends AbstractTransactionalJUnit4SpringContextTests {
 	@Autowired
 	private CursusRepository repository;
-	private static final String CURSUSSEN = "cursussen";   
+	@Autowired
+	private EntityManager manager;
+	private static final String GROEPS_CURSUSSEN = "groepscursussen";   
+	private static final String INDIVIDUELE_CURSUSSEN = "individuelecursussen";
 	
-	private long idVanTestGroep() {
-		return super.jdbcTemplate.queryForObject("select id from cursussen where naam='testGroep'",Long.class);
+	private String idVanTestGroep() {
+		return super.jdbcTemplate.queryForObject("select id from groepscursussen where naam='testGroep'",String.class);
 	}
 	
-	private long idVanTestIndividu() {
-		return super.jdbcTemplate.queryForObject("select id from cursussen where naam='testIndividu'",Long.class);
+	private String idVanTestIndividu() {
+		return super.jdbcTemplate.queryForObject("select id from individuelecursussen where naam='testIndividu'",String.class);
 	}
 	
 	@Test
@@ -52,19 +57,21 @@ public class JpaCursusRepositoryTest extends AbstractTransactionalJUnit4SpringCo
 	
 	@Test   
 	public void createGroepsCursus() {     
-		int aantalGroepsCursussen = super.countRowsInTableWhere(CURSUSSEN,"soort='G'");     
+		int aantalGroepsCursussen = super.countRowsInTable(GROEPS_CURSUSSEN);     
 		GroepsCursus cursus = new GroepsCursus("testGroep2", LocalDate.of(2018,01,01), LocalDate.of(2018, 12, 31));     
-		repository.create(cursus);     
-		assertEquals(aantalGroepsCursussen + 1, super.countRowsInTableWhere(CURSUSSEN, "soort='G'"));
-		assertEquals(1,super.countRowsInTableWhere(CURSUSSEN, "id=" + cursus.getId()));   
+		repository.create(cursus); 
+		manager.flush();
+		assertEquals(aantalGroepsCursussen + 1, super.countRowsInTable(GROEPS_CURSUSSEN));
+		assertEquals(1,super.countRowsInTableWhere(GROEPS_CURSUSSEN, "id='" + cursus.getId() + "'")); 
 	}   
 	
 	@Test   
 	public void createIndividueleCursus() {     
-		int aantalIndividueleCursussen = super.countRowsInTableWhere(CURSUSSEN,"soort='I'");     
+		int aantalIndividueleCursussen = super.countRowsInTable(INDIVIDUELE_CURSUSSEN);    
 		IndividueleCursus cursus = new IndividueleCursus("testIndividueel2", 7);     
-		repository.create(cursus);     
-		assertEquals(aantalIndividueleCursussen + 1, super.countRowsInTableWhere(CURSUSSEN, "soort='I'"));     
-		assertEquals(1,super.countRowsInTableWhere(CURSUSSEN, "id=" + cursus.getId()));   
+		repository.create(cursus);    
+		manager.flush();
+		assertEquals(aantalIndividueleCursussen + 1, super.countRowsInTable(INDIVIDUELE_CURSUSSEN));
+		assertEquals(1,super.countRowsInTableWhere(INDIVIDUELE_CURSUSSEN, "id='" + cursus.getId() + "'"));    
 	} 
 }
